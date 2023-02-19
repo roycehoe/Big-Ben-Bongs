@@ -1,10 +1,17 @@
+name: telegram message
 on:
+  push:
   schedule:
-    - cron: "* * * * *"
+    - cron: "30 5 * * 1,3"
 
 jobs:
-  test_schedule:
+  bot:
+    name: bot
     runs-on: ubuntu-latest
     steps:
-      - name: Every time
-        run: echo "This step will always run"
+      - name: Send telegram message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: "scheduled event: ${{github.event.schedule}}"
