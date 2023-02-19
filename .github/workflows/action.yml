@@ -1,5 +1,9 @@
 name: telegram message
-on: [push]
+# on: [push]
+
+on:
+  schedule:
+    - cron: "1 * * * *"
 jobs:
   build:
     name: Build
