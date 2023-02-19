@@ -1,17 +1,10 @@
-name: telegram message
-# on: [push]
-
 on:
   schedule:
     - cron: "* * * * *"
+
 jobs:
-  build:
-    name: Build
+  test_schedule:
     runs-on: ubuntu-latest
     steps:
-      - name: send default message
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: "this is a test message. Please work :))))"
+      - name: Every time
+        run: echo "This step will always run"
