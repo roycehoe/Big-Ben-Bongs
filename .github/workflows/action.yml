@@ -3,7 +3,7 @@ name: telegram message
 
 on:
   schedule:
-    - cron: "1 * * * *"
+    - cron: "* * * * *"
 jobs:
   build:
     name: Build
