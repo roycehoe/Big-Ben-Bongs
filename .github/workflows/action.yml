@@ -3,15 +3,15 @@ on:
   push:
     branches:
       - "*"
-  schedule:
-    - cron: "0-59 * * * *"
+    schedule:
+      - cron: "0-59 * * * *"
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: some placeholder name
+      - name: Send telegram message
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
