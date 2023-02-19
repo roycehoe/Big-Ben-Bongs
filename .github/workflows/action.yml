@@ -1,7 +1,10 @@
 name: telegram message
 on:
+  push:
+    branches:
+      - "*"
   schedule:
-    - cron: "*/1 * * * *"
+    - cron: "* * * * *"
 
 jobs:
   build:
