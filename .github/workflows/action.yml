@@ -1,8 +1,8 @@
 name: telegram message
 on:
+  workflow_dispatch:
   schedule:
     - cron: "1 * * * *"
-  workflow_dispatch:
 
 jobs:
   bot:
