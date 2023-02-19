@@ -1,17 +1,12 @@
-name: telegram message
+name: Trigger action on a CRON schedule
+
 on:
-  push:
   schedule:
     - cron: "* * * * *"
 
 jobs:
-  bot:
-    name: bot
+  build:
+    name: trigger code checkout
     runs-on: ubuntu-latest
     steps:
-      - name: Send telegram message
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: "scheduled event: ${{github.event.schedule}}"
+      - uses: actions/checkout@v3
