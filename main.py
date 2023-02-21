@@ -21,10 +21,10 @@ DEFAULT_HEADERS = {"AccountKey": LTA_API_KEY, "accept": "application/json"}
 def get_LTA_bus_arrival_data(bus_stop_code: str) -> str:
     try:
         response = requests.get(
-            f"{LTA_BUS_BASEURL}?BusStopCode={MY_HOME_BUS_STOP}", headers=DEFAULT_HEADERS
+            f"{LTA_BUS_BASEURL}?BusStopCode={bus_stop_code}", headers=DEFAULT_HEADERS
         )
         return response.json()
-    except Exception:  # TODO: Better error handling
+    except Exception:  # TODO: Implement better error handling
         raise Exception("Something went wrong with the LTA endpoint")
 
 
