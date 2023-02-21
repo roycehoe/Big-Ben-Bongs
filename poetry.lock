@@ -193,6 +193,21 @@ docs = ["furo (>=2022.12.7)", "proselint (>=0.13)", "sphinx-autodoc-typehints (>
 test = ["appdirs (==1.4.4)", "covdefaults (>=2.2.2)", "pytest-cov (>=4)", "pytest-mock (>=3.10)", "pytest (>=7.2.1)"]
 
 [[package]]
+name = "pydantic"
+version = "1.10.5"
+description = "Data validation and settings management using python type hints"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+typing-extensions = ">=4.2.0"
+
+[package.extras]
+dotenv = ["python-dotenv (>=0.10.4)"]
+email = ["email-validator (>=1.0.3)"]
+
+[[package]]
 name = "python-dotenv"
 version = "0.21.1"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -284,7 +299,7 @@ python-versions = ">=3.7"
 name = "typing-extensions"
 version = "4.5.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -304,7 +319,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "d9341be901474c1f1f58307113d722b9ef3635ec360439a82f94f0053088e832"
+content-hash = "ecde9be973f793a58f8463e4cc8b4357950fbcd4dd3c83a2c28747cb54ce95e8"
 
 [metadata.files]
 anyio = []
@@ -327,6 +342,7 @@ mypy-extensions = []
 packaging = []
 pathspec = []
 platformdirs = []
+pydantic = []
 python-dotenv = []
 python-telegram-bot = []
 pytz = []
