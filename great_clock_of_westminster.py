@@ -20,7 +20,7 @@ class QuarterBellChimes(Enum):
 
 @dataclass
 class GreatClockOfWestminster:
-    """Some clarification. Big Ben refers to the biggest bell in the Great Clock of Westminster. Hence the name of this class is not Big Ben"""
+    """Some clarification needed. Big Ben refers to the biggest bell in the Great Clock of Westminster. Hence the name of this class is not Big Ben"""
 
     hour: str
     minute: str
