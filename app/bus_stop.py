@@ -1,50 +1,61 @@
+import json
 import requests
-import datetime
-from constants import DEFAULT_HEADERS, LTA_BUS_BASEURL
+from constants import BUS_STOP_DATA_URL, DEFAULT_HEADERS, LTA_BUS_BASEURL
+from models.BusStop import BusStopData, LTABusStopResponse
 
-from models.BusArrivalResponse import BusArrivalData, NextBusData
-
-from models.LTABusArrivalData import (
-    LTABusArrivalData,
-    Service,
-)
+LTA_QUERY_LIMIT = 500
 
 
-def get_LTA_bus_arrival_data(bus_stop_code: str) -> LTABusArrivalData:
+def _get_LTA_bus_stop_response(skip: int = 0) -> LTABusStopResponse:
     try:
         response = requests.get(
-            f"{LTA_BUS_BASEURL}?BusStopCode={bus_stop_code}", headers=DEFAULT_HEADERS
+            f"{BUS_STOP_DATA_URL}?$skip={skip}", headers=DEFAULT_HEADERS
         )
-        return LTABusArrivalData(**response.json())
+        return LTABusStopResponse(**response.json())  # type:ignore
     except Exception:  # TODO: Implement better error handling
         raise Exception("Something went wrong with the LTA endpoint")
 
 
-def get_arrival_time(estimated_arrival: str) -> str:
-    try:
-        time = datetime.datetime.fromisoformat(estimated_arrival)
-        return time.strftime("%H:%M:%S")
-    except ValueError:  # No arrival time provided as bus is no longer running
-        return "   --   "
+def init_bus_stop_data():
+    start = 0
+    bus_stop_data = {}
+
+    while True:
+        LTA_bus_stop_data = _get_LTA_bus_stop_response(start)
+        if not LTA_bus_stop_data.bus_stops:
+            print("wee", LTA_bus_stop_data)
+            break
+
+        for bus_stop in LTA_bus_stop_data.bus_stops:
+            bus_stop_data[bus_stop.bus_stop_code] = bus_stop.dict()
+        start += LTA_QUERY_LIMIT
+
+    with open("bus_stop_data.json", "w") as outfile:
+        outfile.write(json.dumps(bus_stop_data))
 
 
-def get_estimated_arrival(service: Service) -> list[str]:
-    return [
-        get_arrival_time(service.next_bus.estimated_arrival),
-        get_arrival_time(service.next_bus2.estimated_arrival),
-        get_arrival_time(service.next_bus3.estimated_arrival),
-    ]
+# def init_bus_stop_data() -> None:
+#     bus_stop_data = {}
+
+#     LTA_bus_stop_data = _get_LTA_bus_stop_response()
+#     for bus_stop in LTA_bus_stop_data.bus_stops:
+#         bus_stop_data[bus_stop.bus_stop_code] = bus_stop.dict()
+
+#     with open("bus_stop_data.json", "w") as outfile:
+#         outfile.write(json.dumps(bus_stop_data))
 
 
-def get_next_bus_data(service: Service) -> NextBusData:
-    return NextBusData(
-        service_no=service.service_no, estimated_arrival=get_estimated_arrival(service)
-    )
+def _get_bus_stop_data() -> dict[str, BusStopData]:
+    file = open("bus_stop_data.json")
+    raw_bus_stop_data = json.load(file)
+    return {key: BusStopData(**value) for (key, value) in raw_bus_stop_data.items()}
 
 
-def get_bus_arrival_data(bus_stop_code: str) -> BusArrivalData:
-    LTA_bus_arrival_data = get_LTA_bus_arrival_data(bus_stop_code)
-    next_buses = [get_next_bus_data(data) for data in LTA_bus_arrival_data.services]
-    return BusArrivalData(
-        bus_stop_code=LTA_bus_arrival_data.bus_stop_code, next_buses=next_buses
-    )
+def is_valid_bus_stop(bus_stop: str) -> bool:
+    bus_stop_data = _get_bus_stop_data()
+    return bus_stop in bus_stop_data.keys()
+
+
+def get_bus_stop_description(bus_stop: str) -> str:
+    bus_stop_data = _get_bus_stop_data()
+    return bus_stop_data[bus_stop].description

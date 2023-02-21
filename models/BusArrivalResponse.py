@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from app.bus_stop import get_bus_stop_description
+
 
 class ArrivalTime(BaseModel):
     hour: str
@@ -21,6 +23,6 @@ class BusArrivalData(BaseModel):
 
     def __str__(self):
         next_buses_text = "\n".join([str(i) for i in self.next_buses])
-        return f"""Bus stop: {self.bus_stop_code}
+        return f"""Bus stop: {self.bus_stop_code} - {get_bus_stop_description(self.bus_stop_code)}
 
 {next_buses_text}"""

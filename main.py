@@ -8,7 +8,7 @@ from telegram.ext import (
     CommandHandler,
     ContextTypes,
 )
-from app.bus_stop import get_bus_arrival_data
+from app.bus_arrival import get_bus_arrival_data
 
 from constants import BOT_TOKEN
 
