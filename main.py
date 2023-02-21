@@ -1,17 +1,13 @@
 import asyncio
-from typing import Optional, Union
 import requests
 import datetime
 
 from dotenv import dotenv_values
 import telegram
-from models.BusArrivalResponse import ArrivalTime, BusStopData, NextBusData
+from models.BusArrivalResponse import BusStopData, NextBusData
 
 from models.LTABusArrivalData import (
     LTABusArrivalData,
-    NextBus,
-    NextBus2,
-    NextBus3,
     Service,
 )
 
@@ -37,15 +33,15 @@ def get_LTA_bus_arrival_data(bus_stop_code: str) -> LTABusArrivalData:
         raise Exception("Something went wrong with the LTA endpoint")
 
 
-def get_arrival_time(estimated_arrival: str) -> Optional[ArrivalTime]:
+def get_arrival_time(estimated_arrival: str) -> str:
     try:
         time = datetime.datetime.fromisoformat(estimated_arrival)
-        return ArrivalTime(hour=time.hour, minute=time.minute, second=time.second)
-    except ValueError:  # No arrival time provided as bus is not running
-        return None
+        return time.strftime("%H:%M:%S")
+    except ValueError:  # No arrival time provided as bus is no longer running
+        return "   --   "
 
 
-def get_estimated_arrival(service: Service) -> list[Union[ArrivalTime, None]]:
+def get_estimated_arrival(service: Service) -> list[str]:
     return [
         get_arrival_time(service.next_bus.estimated_arrival),
         get_arrival_time(service.next_bus2.estimated_arrival),
