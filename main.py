@@ -24,7 +24,7 @@ START_TEXT = """Commands
 /help - View help menu
 """
 
-SAVED_DATA = {}
+TEST_DATA = ["94079", "94069"]
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -40,7 +40,12 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def show(update: Update, context: ContextTypes.DEFAULT_TYPE):
     bus_stops = context.user_data["bus_stops"]
-    await update.message.reply_text(bus_stops)
+
+    bus_stop_display = "————————————————————\n".join(
+        [str(get_bus_stop_data(i)) for i in bus_stops]
+    )
+
+    await update.message.reply_text(bus_stop_display)
 
 
 async def bus_stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
