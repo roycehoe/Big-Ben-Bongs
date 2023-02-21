@@ -1,8 +1,7 @@
 name: telegram message
 on:
-  push:
-    schedule:
-      - cron: "*/5 * * * *" # shortest workflow is every 5 minutes
+  schedule:
+    - cron: "*/5 * * * *" # shortest workflow is every 5 minutes
 
 jobs:
   bot:
