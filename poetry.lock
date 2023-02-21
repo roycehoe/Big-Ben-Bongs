@@ -225,6 +225,14 @@ socks = ["httpx"]
 webhooks = ["tornado (>=6.2,<7.0)"]
 
 [[package]]
+name = "pytz"
+version = "2022.7.1"
+description = "World timezone definitions, modern and historical"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "requests"
 version = "2.28.2"
 description = "Python HTTP for Humans."
@@ -296,7 +304,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "88496c5ad2bcb29e8e7a4e75d7626dae8159c5e317f7b48ee8c6f296ee3b8d24"
+content-hash = "d9341be901474c1f1f58307113d722b9ef3635ec360439a82f94f0053088e832"
 
 [metadata.files]
 anyio = []
@@ -321,6 +329,7 @@ pathspec = []
 platformdirs = []
 python-dotenv = []
 python-telegram-bot = []
+pytz = []
 requests = []
 rfc3986 = []
 sniffio = []
