@@ -1,8 +1,8 @@
 name: telegram message
-on: [push]
-# on:
-# schedule:
-#   - cron: "/5 * * * *" # shortest workflow is every 5 minutes
+# on: [push]
+on:
+  schedule:
+    - cron: "/5 * * * *" # shortest workflow is every 5 minutes
 
 jobs:
   # bot:
@@ -19,7 +19,5 @@ jobs:
     name: list-files
     runs-on: ubuntu-latest
     steps:
-      - name: setup??
-        uses: actions/checkout@v2
       - name: list files
         run: ls
