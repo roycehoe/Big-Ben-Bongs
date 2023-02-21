@@ -2,7 +2,7 @@ import requests
 import datetime
 from constants import DEFAULT_HEADERS, LTA_BUS_BASEURL
 
-from models.BusArrivalResponse import BusStopData, NextBusData
+from models.BusArrivalResponse import BusArrivalData, NextBusData
 
 from models.LTABusArrivalData import (
     LTABusArrivalData,
@@ -42,9 +42,9 @@ def get_next_bus_data(service: Service) -> NextBusData:
     )
 
 
-def get_bus_stop_data(bus_stop_code: str) -> BusStopData:
+def get_bus_arrival_data(bus_stop_code: str) -> BusArrivalData:
     LTA_bus_arrival_data = get_LTA_bus_arrival_data(bus_stop_code)
     next_buses = [get_next_bus_data(data) for data in LTA_bus_arrival_data.services]
-    return BusStopData(
+    return BusArrivalData(
         bus_stop_code=LTA_bus_arrival_data.bus_stop_code, next_buses=next_buses
     )

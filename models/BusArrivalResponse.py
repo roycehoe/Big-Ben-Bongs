@@ -1,7 +1,4 @@
-from typing import List, Optional, Union
-
-from pydantic import BaseModel, Field
-import datetime
+from pydantic import BaseModel
 
 
 class ArrivalTime(BaseModel):
@@ -18,7 +15,7 @@ class NextBusData(BaseModel):
         return f"Bus no: {self.service_no} | {' | '.join(self.estimated_arrival)}"
 
 
-class BusStopData(BaseModel):
+class BusArrivalData(BaseModel):
     bus_stop_code: str
     next_buses: list[NextBusData]
 

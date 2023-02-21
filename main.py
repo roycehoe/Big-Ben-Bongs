@@ -8,7 +8,7 @@ from telegram.ext import (
     CommandHandler,
     ContextTypes,
 )
-from app.bus_stop import get_bus_stop_data
+from app.bus_stop import get_bus_arrival_data
 
 from constants import BOT_TOKEN
 
@@ -42,7 +42,7 @@ async def show(update: Update, context: ContextTypes.DEFAULT_TYPE):
     bus_stops = context.user_data["bus_stops"]
 
     bus_stop_display = "————————————————————\n".join(
-        [str(get_bus_stop_data(i)) for i in bus_stops]
+        [str(get_bus_arrival_data(i)) for i in bus_stops]
     )
 
     await update.message.reply_text(bus_stop_display)
@@ -50,7 +50,7 @@ async def show(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def bus_stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_input = update.message.text
-    bus_stop_data = get_bus_stop_data(user_input)
+    bus_stop_data = get_bus_arrival_data(user_input)
     await context.bot.send_message(
         chat_id=update.effective_chat.id, text=f"{bus_stop_data}"
     )
