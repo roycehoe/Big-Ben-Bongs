@@ -17,17 +17,30 @@ logging.basicConfig(
 )
 
 START_TEXT = """Commands
-/start - Start the application
-/help - View help menu
-/show - Shows all saved bus stops
-/new - Create a list of bus stops
+/start - Create a list of bus stops
+/stop - Create a list of bus stops
+/show - Shows saved bus stops
 /about - View about page for this application
-
+/help - View help menu
 """
+
+SAVED_DATA = {}
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=START_TEXT)
+    context.user_data["bus_stops"]: list[str] = []
+    await update.message.reply_text(
+        "Please input the bus stop numbers. Type /stop when you are done."
+    )
+
+
+async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Done!")
+
+
+async def show(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    bus_stops = context.user_data["bus_stops"]
+    await update.message.reply_text(bus_stops)
 
 
 async def bus_stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -38,12 +51,21 @@ async def bus_stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+async def input_bus_stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data["bus_stops"].append(update.message.text)
+    await update.message.reply_text(
+        "Bus stop added. Input another bus_stop, or type /stop to stop"
+    )
+
+
 application = ApplicationBuilder().token(BOT_TOKEN).build()
 
-start_handler = CommandHandler("start", start)
-get_bus_stop_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), bus_stop)
+application.add_handler(CommandHandler("start", start))
+application.add_handler(CommandHandler("stop", stop))
+application.add_handler(CommandHandler("show", show))
 
-application.add_handler(start_handler)
-application.add_handler(get_bus_stop_handler)
+application.add_handler(
+    MessageHandler(filters.TEXT & (~filters.COMMAND), input_bus_stop)
+)
 
 application.run_polling()
