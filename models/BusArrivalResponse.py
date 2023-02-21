@@ -15,7 +15,6 @@ class NextBusData(BaseModel):
     estimated_arrival: list[str]
 
     def __str__(self) -> str:
-        print(self.estimated_arrival)
         return f"Bus no: {self.service_no} | {' | '.join(self.estimated_arrival)}"
 
 

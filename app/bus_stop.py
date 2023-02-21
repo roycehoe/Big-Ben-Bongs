@@ -1,23 +1,13 @@
 import requests
 import datetime
+from constants import DEFAULT_HEADERS, LTA_BUS_BASEURL
 
-from dotenv import dotenv_values
 from models.BusArrivalResponse import BusStopData, NextBusData
 
 from models.LTABusArrivalData import (
     LTABusArrivalData,
     Service,
 )
-
-
-env_values = dotenv_values(".env")
-CHAT_ID = env_values["TELEGRAM_CHAT_ID"]
-LTA_API_KEY = env_values["LTA_API_KEY"]
-MY_HOME_BUS_STOP = env_values["MY_HOME_BUS_STOP"]
-
-LTA_BUS_BASEURL = "http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2"
-
-DEFAULT_HEADERS = {"AccountKey": LTA_API_KEY, "accept": "application/json"}
 
 
 def get_LTA_bus_arrival_data(bus_stop_code: str) -> LTABusArrivalData:
