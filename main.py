@@ -70,8 +70,7 @@ def get_bus_stop_data(bus_stop_code: str) -> BusStopData:
 async def main() -> None:
     bus_stop_data = get_bus_stop_data(MY_HOME_BUS_STOP)
     bot = telegram.Bot(token=BOT_TOKEN)
-    print(bus_stop_data)
-    # await bot.send_message(chat_id=CHAT_ID, text=bus_stop_data.__str__())
+    await bot.send_message(chat_id=CHAT_ID, text=str(bus_stop_data))
 
 
 asyncio.run(main())
