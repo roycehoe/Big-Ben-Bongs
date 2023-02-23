@@ -5,6 +5,7 @@ from telegram.ext import (
     ApplicationBuilder,
     ContextTypes,
     CommandHandler,
+    ConversationHandler,
 )
 from telegram.ext import (
     ApplicationBuilder,
@@ -13,7 +14,8 @@ from telegram.ext import (
 from app.bus_arrival import get_bus_arrival_data
 
 from constants import ABOUT_TEXT, BOT_TOKEN, WELCOME_TEXT
-from service.new import NewConversation
+from service.add import Add
+from service.remove import Remove
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -32,7 +34,8 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def show(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.user_data.get("bus_stops"):
-        await update.message.reply_text("Please create a new bus stop")
+        await update.message.reply_text("Please add a new bus stop")
+        ConversationHandler.END
         return
 
     bus_stops = context.user_data["bus_stops"]
@@ -50,7 +53,8 @@ application.add_handler(CommandHandler("help", start))
 application.add_handler(CommandHandler("menu", start))
 application.add_handler(CommandHandler("about", about))
 
-application.add_handler(NewConversation().get_handler(command="add"))  # Create
-application.add_handler(CommandHandler("show", show))  # Read
+application.add_handler(Add().get_handler(command="add"))
+application.add_handler(CommandHandler("show", show))
+application.add_handler(Remove().get_handler(command="remove"))
 
 application.run_polling()

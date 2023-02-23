@@ -12,24 +12,11 @@ BUS_STOP_DATA_URL = "http://datamall2.mytransport.sg/ltaodataservice/BusStops"
 DEFAULT_HEADERS = {"AccountKey": LTA_API_KEY, "accept": "application/json"}
 
 
-MENU_TEXT = """Commands
-
-/bus- Shows bus timings for saved bus stops
-
-/new - Create a new list of bus stops
-/add- Add to current list of bus stops
-/stop - Stop populating list of bus stops
-
-/about - About page
-/help - View menu
-/menu - View menu
-"""
-
 WELCOME_TEXT = """What would you like to do?
 
-/add - Add to your list of bookmarked bus stops
-/show - Show all previous bus stops
-/remove - Remove from your list of bookmarked bus stops
+/add - Add to your bookmarked bus stops
+/show - Show bus timings for your bookmarked bus stops
+/remove - Remove from your bookmarked bus stops
 """
 
 ABOUT_TEXT = "View bus timings for your favourite bus stops"

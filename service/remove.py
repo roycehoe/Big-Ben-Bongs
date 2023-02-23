@@ -9,6 +9,7 @@ from telegram.ext import (
 )
 
 from app.bus_stop import get_bus_stop_description, is_valid_bus_stop
+from constants import WELCOME_TEXT
 
 
 class NewInputStates(Enum):
@@ -16,9 +17,8 @@ class NewInputStates(Enum):
     CONFIRM = 1
 
 
-CONVERSATION_OPTIONS = """Type /finish to finish adding bus stops
-Type /show to show current list of bus stops.
-Type /exit to exit without saving."""
+CONVERSATION_OPTIONS = """Type /finish to finish deleting bus stops
+Type /show to show current list of bus stops."""
 
 
 def _get_saved_bus_stop_display(bus_stops: list[str]) -> str:
@@ -32,12 +32,13 @@ def _get_saved_bus_stop_display(bus_stops: list[str]) -> str:
     )
 
 
-class NewConversation:
-    async def add(
+class Remove:
+    async def remove(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
     ) -> NewInputStates:
         if not context.user_data.get("bus_stops"):
-            context.user_data["bus_stops"] = []
+            await update.message.reply_text(f"You have no saved bus stops")
+            return ConversationHandler.END
 
         await update.message.reply_text(
             f"Please input your bus stops.\n\n{CONVERSATION_OPTIONS}"
@@ -54,16 +55,14 @@ class NewConversation:
         return NewInputStates.CONFIRM
 
     async def input(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        if not is_valid_bus_stop(update.message.text):
-            await update.message.reply_text("Please input a valid bus stop.")
-        elif update.message.text in context.user_data["bus_stops"]:
+        if update.message.text not in context.user_data["bus_stops"]:
             await update.message.reply_text(
-                "You have already bookmarked this bus stop. Please input another bus stop."
+                "No bus stop found. Please input a previously saved bus stop."
             )
         else:
-            context.user_data["bus_stops"].append(update.message.text)
+            context.user_data["bus_stops"].remove(update.message.text)
             await update.message.reply_text(
-                f"Bus stop added. Please key in your next bus stop.\n\n{CONVERSATION_OPTIONS}"
+                f"Bus stop removed. Please key in your next bus stop.\n\n{CONVERSATION_OPTIONS}"
             )
 
     async def show(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -73,16 +72,12 @@ class NewConversation:
         await update.message.reply_text(saved_bus_stop_display)
 
     async def finish(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-        await update.message.reply_text("Your bus stops has been saved.")
-        return ConversationHandler.END
-
-    async def exit(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-        await update.message.reply_text("Exit successful")
+        await update.message.reply_text(WELCOME_TEXT)
         return ConversationHandler.END
 
     def get_handler(self, command: str) -> ConversationHandler:
         return ConversationHandler(
-            entry_points=[CommandHandler(command, self.add)],
+            entry_points=[CommandHandler(command, self.remove)],
             states={
                 NewInputStates.INPUT: [
                     MessageHandler(filters.TEXT & (~filters.COMMAND), self.input),
@@ -90,5 +85,5 @@ class NewConversation:
                     CommandHandler("finish", self.finish),
                 ],
             },
-            fallbacks=[CommandHandler("exit", self.exit)],
+            fallbacks=[CommandHandler("finish", self.finish)],
         )
