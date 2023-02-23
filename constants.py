@@ -25,6 +25,4 @@ MENU_TEXT = """Commands
 /menu - View menu
 """
 
-ABOUT_TEXT = (
-    """Bookmark your favourite bus stops. View upcoming busses on a press of a button"""
-)
+ABOUT_TEXT = "View bus timings for your favourite bus stops"
