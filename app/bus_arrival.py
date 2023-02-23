@@ -23,7 +23,7 @@ def get_LTA_bus_arrival_data(bus_stop_code: str) -> LTABusArrivalData:
 def get_arrival_time(estimated_arrival: str) -> str:
     try:
         time = datetime.datetime.fromisoformat(estimated_arrival)
-        return time.strftime("%H:%M:%S")
+        return time.strftime("%H:%M")
     except ValueError:  # No arrival time provided as bus is no longer running
         return "   --   "
 

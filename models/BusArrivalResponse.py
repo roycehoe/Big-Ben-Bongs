@@ -3,12 +3,6 @@ from pydantic import BaseModel
 from app.bus_stop import get_bus_stop_description
 
 
-class ArrivalTime(BaseModel):
-    hour: str
-    minute: str
-    second: str
-
-
 class NextBusData(BaseModel):
     service_no: str
     estimated_arrival: list[str]

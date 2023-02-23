@@ -25,4 +25,11 @@ MENU_TEXT = """Commands
 /menu - View menu
 """
 
+WELCOME_TEXT = """What would you like to do?
+
+/new - Create a new list of bookmarked bus stops. All previous bookmarks will be deleted
+/show - Show all previous bus stops
+/update - Add or remove from bookmarked bus stops
+"""
+
 ABOUT_TEXT = "View bus timings for your favourite bus stops"
