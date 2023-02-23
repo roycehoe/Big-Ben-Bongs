@@ -16,7 +16,7 @@ def _get_LTA_bus_stop_response(skip: int = 0) -> LTABusStopResponse:
         raise Exception("Something went wrong with the LTA endpoint")
 
 
-def init_bus_stop_data():
+def init_bus_stop_data() -> None:
     start = 0
     bus_stop_data = {}
 
@@ -32,17 +32,6 @@ def init_bus_stop_data():
 
     with open("bus_stop_data.json", "w") as outfile:
         outfile.write(json.dumps(bus_stop_data))
-
-
-# def init_bus_stop_data() -> None:
-#     bus_stop_data = {}
-
-#     LTA_bus_stop_data = _get_LTA_bus_stop_response()
-#     for bus_stop in LTA_bus_stop_data.bus_stops:
-#         bus_stop_data[bus_stop.bus_stop_code] = bus_stop.dict()
-
-#     with open("bus_stop_data.json", "w") as outfile:
-#         outfile.write(json.dumps(bus_stop_data))
 
 
 def _get_bus_stop_data() -> dict[str, BusStopData]:
