@@ -10,3 +10,21 @@ MY_HOME_BUS_STOP = env_values["MY_HOME_BUS_STOP"]
 LTA_BUS_BASEURL = "http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2"
 BUS_STOP_DATA_URL = "http://datamall2.mytransport.sg/ltaodataservice/BusStops"
 DEFAULT_HEADERS = {"AccountKey": LTA_API_KEY, "accept": "application/json"}
+
+
+MENU_TEXT = """Commands
+
+/bus- Shows bus timings for saved bus stops
+
+/new - Create a new list of bus stops
+/add- Add to current list of bus stops
+/stop - Stop populating list of bus stops
+
+/about - About page
+/help - View menu
+/menu - View menu
+"""
+
+ABOUT_TEXT = (
+    """Bookmark your favourite bus stops. View upcoming busses on a press of a button"""
+)
