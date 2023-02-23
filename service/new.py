@@ -7,7 +7,7 @@ from telegram.ext import ConversationHandler, CommandHandler, MessageHandler, fi
 class NewInputStates(Enum):
     INPUT = 0
     CONFIRM = 1
-    SHOW = 1
+    SHOW = 2
 
 
 # Define the functions that handle each step of the conversation
@@ -32,7 +32,7 @@ async def input_numbers(update, context):
         number = int(update.message.text)
         context.user_data["numbers"].append(number)
         await update.message.reply_text(
-            "Number added. Input another number or type /done to finish."
+            "Number added. Input another number or type /done to finish or /show to show current list of numbers."
         )
     except ValueError:
         await update.message.reply_text("Please input a valid number.")
@@ -66,9 +66,6 @@ input_number_handler = ConversationHandler(
             CommandHandler("done", end_input_numbers),
             CommandHandler("cancel", cancel_input_numbers),
             MessageHandler(filters.TEXT & (~filters.COMMAND), confirm_numbers),
-        ],
-        NewInputStates.SHOW: [
-            CommandHandler("show", show_numbers),
         ],
     },
     fallbacks=[CommandHandler("cancel", cancel_input_numbers)],
