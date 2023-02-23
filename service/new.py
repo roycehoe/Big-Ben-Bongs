@@ -33,10 +33,12 @@ def _get_saved_bus_stop_display(bus_stops: list[str]) -> str:
 
 
 class NewConversation:
-    async def start(
+    async def add(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
     ) -> NewInputStates:
-        context.user_data["bus_stops"] = []
+        if not context.user_data.get("bus_stops"):
+            context.user_data["bus_stops"] = []
+
         await update.message.reply_text(
             f"Please input your bus stops.\n\n{CONVERSATION_OPTIONS}"
         )
@@ -80,7 +82,7 @@ class NewConversation:
 
     def get_handler(self, command: str) -> ConversationHandler:
         return ConversationHandler(
-            entry_points=[CommandHandler(command, self.start)],
+            entry_points=[CommandHandler(command, self.add)],
             states={
                 NewInputStates.INPUT: [
                     MessageHandler(filters.TEXT & (~filters.COMMAND), self.input),

@@ -45,13 +45,12 @@ async def show(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 application = ApplicationBuilder().token(BOT_TOKEN).build()
 
-
 application.add_handler(CommandHandler("start", start))
 application.add_handler(CommandHandler("help", start))
 application.add_handler(CommandHandler("menu", start))
 application.add_handler(CommandHandler("about", about))
 
-application.add_handler(NewConversation().get_handler(command="new"))  # Create
+application.add_handler(NewConversation().get_handler(command="add"))  # Create
 application.add_handler(CommandHandler("show", show))  # Read
 
 application.run_polling()

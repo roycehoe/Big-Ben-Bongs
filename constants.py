@@ -27,9 +27,9 @@ MENU_TEXT = """Commands
 
 WELCOME_TEXT = """What would you like to do?
 
-/new - Create a new list of bookmarked bus stops. All previous bookmarks will be deleted
+/add - Add to your list of bookmarked bus stops
 /show - Show all previous bus stops
-/update - Add or remove from bookmarked bus stops
+/remove - Remove from your list of bookmarked bus stops
 """
 
 ABOUT_TEXT = "View bus timings for your favourite bus stops"
