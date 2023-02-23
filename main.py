@@ -35,19 +35,6 @@ async def converse(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 application = ApplicationBuilder().token(BOT_TOKEN).build()
 
-# application.add_handler(CommandHandler("new", new))
-# application.add_handler(CommandHandler("stop", stop))
-# application.add_handler(CommandHandler("bus", show))
-
-# application.add_handler(CommandHandler("help", menu))
-# application.add_handler(CommandHandler("menu", menu))
-# application.add_handler(CommandHandler("about", about))
-
-# application.add_handler(
-#     MessageHandler(filters.TEXT & (~filters.COMMAND), input_bus_stop)
-# )
-
 application.add_handler(input_number_handler)
-
 
 application.run_polling()

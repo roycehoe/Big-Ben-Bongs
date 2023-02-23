@@ -1,7 +1,12 @@
 from enum import Enum
-from telegram.ext import ConversationHandler, CommandHandler, MessageHandler, filters
-
-# Define the states of the conversation
+from telegram import Update
+from telegram.ext import (
+    ConversationHandler,
+    CommandHandler,
+    MessageHandler,
+    filters,
+    ContextTypes,
+)
 
 
 class NewInputStates(Enum):
@@ -10,63 +15,60 @@ class NewInputStates(Enum):
     SHOW = 2
 
 
-# Define the functions that handle each step of the conversation
-async def start_input_numbers(update, context):
-    context.user_data["numbers"] = []
-    await update.message.reply_text(
-        "Please input numbers. Type /cancel to cancel the input."
-    )
-    return NewInputStates.INPUT
-
-
-async def confirm_numbers(update, context):
-    numbers = context.user_data["numbers"]
-    await update.message.reply_text(
-        f"You have inputted the following numbers: {numbers}. Type /done to confirm or /cancel to cancel the input."
-    )
-    return NewInputStates.CONFIRM
-
-
-async def input_numbers(update, context):
-    try:
-        number = int(update.message.text)
-        context.user_data["numbers"].append(number)
+class NewConversation:
+    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        context.user_data["numbers"] = []
         await update.message.reply_text(
-            "Number added. Input another number or type /done to finish or /show to show current list of numbers."
+            "Please input numbers. Type /cancel to cancel the input."
         )
-    except ValueError:
-        await update.message.reply_text("Please input a valid number.")
+        return NewInputStates.INPUT
+
+    async def confirm(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        numbers = context.user_data["numbers"]
+        await update.message.reply_text(
+            f"You have inputted the following numbers: {numbers}. Type /done to confirm or /cancel to cancel the input."
+        )
+        return NewInputStates.CONFIRM
+
+    async def input_numbers(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        try:
+            number = int(update.message.text)
+            context.user_data["numbers"].append(number)
+            await update.message.reply_text(
+                "Number added. Input another number or type /done to finish or /show to show current list of numbers."
+            )
+        except ValueError:
+            await update.message.reply_text("Please input a valid number.")
+
+    async def show(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        await update.message.reply_text(context.user_data["numbers"])
+
+    async def end(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        await update.message.reply_text("Input completed.")
+        return ConversationHandler.END
+
+    async def cancel(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        await update.message.reply_text("Input canceled.")
+        return ConversationHandler.END
+
+    def get_handler(self):
+        return ConversationHandler(
+            entry_points=[CommandHandler("start", self.start)],
+            states={
+                NewInputStates.INPUT: [
+                    MessageHandler(
+                        filters.TEXT & (~filters.COMMAND), self.input_numbers
+                    ),
+                    CommandHandler("show", self.show),
+                ],
+                NewInputStates.CONFIRM: [
+                    CommandHandler("done", self.end),
+                    CommandHandler("cancel", self.cancel),
+                    MessageHandler(filters.TEXT & (~filters.COMMAND), self.confirm),
+                ],
+            },
+            fallbacks=[CommandHandler("cancel", self.cancel)],
+        )
 
 
-async def show_numbers(update, context):
-    await update.message.reply_text(context.user_data["numbers"])
-
-
-async def end_input_numbers(update, context):
-    await update.message.reply_text("Input completed.")
-    return ConversationHandler.END
-
-
-async def cancel_input_numbers(update, context):
-    await update.message.reply_text("Input canceled.")
-    return ConversationHandler.END
-
-
-# Create the ConversationHandler
-
-
-input_number_handler = ConversationHandler(
-    entry_points=[CommandHandler("input_numbers", start_input_numbers)],
-    states={
-        NewInputStates.INPUT: [
-            MessageHandler(filters.TEXT & (~filters.COMMAND), input_numbers),
-            CommandHandler("show", show_numbers),
-        ],
-        NewInputStates.CONFIRM: [
-            CommandHandler("done", end_input_numbers),
-            CommandHandler("cancel", cancel_input_numbers),
-            MessageHandler(filters.TEXT & (~filters.COMMAND), confirm_numbers),
-        ],
-    },
-    fallbacks=[CommandHandler("cancel", cancel_input_numbers)],
-)
+input_number_handler = NewConversation().get_handler()
