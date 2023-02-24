@@ -1,5 +1,4 @@
 import logging
-from click import command
 from telegram import Update
 from telegram.ext import (
     ApplicationBuilder,
@@ -13,9 +12,10 @@ from telegram.ext import (
 )
 from app.bus_arrival import get_bus_arrival_data
 
-from constants import ABOUT_TEXT, BOT_TOKEN, WELCOME_TEXT
+from constants import ABOUT_MESSAGE, BOT_TOKEN, MAIN_MENU_MESSAGE
 from service.add import Add
 from service.remove import Remove
+from utils import show_main_menu
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -23,18 +23,21 @@ logging.basicConfig(
 
 TEST_DATA = ["94079", "94069"]
 
+NO_BUS_STOP_FOUND_MESSAGE = "No bookmarked bus stops found. Please add a new bus stop"
 
+
+@show_main_menu(text=MAIN_MENU_MESSAGE)
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(WELCOME_TEXT)
+    return
 
 
 async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(ABOUT_TEXT)
+    await update.message.reply_text(ABOUT_MESSAGE)
 
 
 async def show(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.user_data.get("bus_stops"):
-        await update.message.reply_text("Please add a new bus stop")
+        await update.message.reply_text(NO_BUS_STOP_FOUND_MESSAGE)
         ConversationHandler.END
         return
 

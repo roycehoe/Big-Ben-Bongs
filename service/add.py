@@ -9,7 +9,7 @@ from telegram.ext import (
 )
 
 from app.bus_stop import get_bus_stop_description, is_valid_bus_stop
-from constants import WELCOME_TEXT
+from constants import MAIN_MENU_MESSAGE
 
 
 class NewInputStates(Enum):
@@ -23,9 +23,7 @@ Type /exit to exit without saving."""
 BUS_STOP_ALREADY_BOOKMARKED_MESSAGE = (
     "You have already bookmarked this bus stop. Please input another bus stop."
 )
-
 ASK_FOR_NEXT_BUS_STOP_MESSAGE = "Bus stop added. Please key in your next bus stop."
-
 INVALID_BUS_STOP_MESSAGE = "Please input a valid bus stop."
 BUS_STOP_SAVED_MESSAGE = "Your bus stops has been saved."
 EXIT_SUCCESSFUL_MESSAGE = "Exit successful"
@@ -44,7 +42,7 @@ def _get_saved_bus_stop_display(bus_stops: list[str]) -> str:
 class Add:
     new_bus_stops: list[str] = []
 
-    async def add(
+    async def start(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
     ) -> NewInputStates:
         if not context.user_data.get("bus_stops"):
@@ -58,6 +56,10 @@ class Add:
     async def confirm(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
     ) -> NewInputStates:
+        context.user_data["bus_stops"] = [
+            *context.user_data["bus_stops"],
+            *self.new_bus_stops,
+        ]
         saved_bus_stop_display = _get_saved_bus_stop_display(
             context.user_data["bus_stops"]
         )
@@ -68,10 +70,12 @@ class Add:
         if not is_valid_bus_stop(update.message.text):
             await update.message.reply_text(INVALID_BUS_STOP_MESSAGE)
             return
+
         if update.message.text in context.user_data["bus_stops"]:
             await update.message.reply_text(BUS_STOP_ALREADY_BOOKMARKED_MESSAGE)
             return
-        context.user_data["bus_stops"].append(update.message.text)
+
+        self.new_bus_stops.append(update.message.text)
         await update.message.reply_text(
             f"Bus stop added. Please key in your next bus stop.\n\n{CONVERSATION_OPTIONS}"
         )
@@ -84,17 +88,18 @@ class Add:
 
     async def finish(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         await update.message.reply_text(BUS_STOP_SAVED_MESSAGE)
-        await update.message.reply_text(WELCOME_TEXT)
+        await update.message.reply_text(MAIN_MENU_MESSAGE)
         return ConversationHandler.END
 
     async def exit(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+        self.new_bus_stops = []
         await update.message.reply_text(EXIT_SUCCESSFUL_MESSAGE)
-        await update.message.reply_text(WELCOME_TEXT)
+        await update.message.reply_text(MAIN_MENU_MESSAGE)
         return ConversationHandler.END
 
     def get_conversation_handler(self, command: str) -> ConversationHandler:
         return ConversationHandler(
-            entry_points=[CommandHandler(command, self.add)],
+            entry_points=[CommandHandler(command, self.start)],
             states={
                 NewInputStates.INPUT: [
                     MessageHandler(filters.TEXT & (~filters.COMMAND), self.input),

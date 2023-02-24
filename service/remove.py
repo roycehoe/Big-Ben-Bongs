@@ -9,7 +9,8 @@ from telegram.ext import (
 )
 
 from app.bus_stop import get_bus_stop_description, is_valid_bus_stop
-from constants import WELCOME_TEXT
+from constants import MAIN_MENU_MESSAGE
+from utils import show_main_menu
 
 
 class NewInputStates(Enum):
@@ -33,7 +34,7 @@ def _get_saved_bus_stop_display(bus_stops: list[str]) -> str:
 
 
 class Remove:
-    async def remove(
+    async def start(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
     ) -> NewInputStates:
         if not context.user_data.get("bus_stops"):
@@ -62,13 +63,13 @@ class Remove:
         )
         await update.message.reply_text(saved_bus_stop_display)
 
+    @show_main_menu
     async def finish(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-        await update.message.reply_text(WELCOME_TEXT)
         return ConversationHandler.END
 
     def get_conversation_handler(self, command: str) -> ConversationHandler:
         return ConversationHandler(
-            entry_points=[CommandHandler(command, self.remove)],
+            entry_points=[CommandHandler(command, self.start)],
             states={
                 NewInputStates.INPUT: [
                     MessageHandler(filters.TEXT & (~filters.COMMAND), self.input),
