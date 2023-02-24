@@ -20,6 +20,16 @@ class NewInputStates(Enum):
 CONVERSATION_OPTIONS = """Type /finish to finish adding bus stops
 Type /show to show current list of bus stops.
 Type /exit to exit without saving."""
+BUS_STOP_ALREADY_BOOKMARKED_MESSAGE = (
+    "You have already bookmarked this bus stop. Please input another bus stop."
+)
+
+ASK_FOR_NEXT_BUS_STOP_MESSAGE = "Bus stop added. Please key in your next bus stop."
+
+INVALID_BUS_STOP_MESSAGE = "Please input a valid bus stop."
+BUS_STOP_SAVED_MESSAGE = "Your bus stops has been saved."
+EXIT_SUCCESSFUL_MESSAGE = "Exit successful"
+SAVED_BUS_STOP_DISPLAY_PREPEND_MESSAGE = "Here are your saved bus stops:"
 
 
 def _get_saved_bus_stop_display(bus_stops: list[str]) -> str:
@@ -28,12 +38,12 @@ def _get_saved_bus_stop_display(bus_stops: list[str]) -> str:
     ]
     bus_stop_display = "\n".join([data for data in bus_stop_data])
 
-    return (
-        f"Here are your saved bus stops: \n{bus_stop_display}\n\n{CONVERSATION_OPTIONS}"
-    )
+    return f"{SAVED_BUS_STOP_DISPLAY_PREPEND_MESSAGE} \n{bus_stop_display}\n\n{CONVERSATION_OPTIONS}"
 
 
 class Add:
+    new_bus_stops: list[str] = []
+
     async def add(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
     ) -> NewInputStates:
@@ -41,7 +51,7 @@ class Add:
             context.user_data["bus_stops"] = []
 
         await update.message.reply_text(
-            f"Please input a bus stop to add to your bokmarked bus stops.\n\n{CONVERSATION_OPTIONS}"
+            f"{ASK_FOR_NEXT_BUS_STOP_MESSAGE}\n\n{CONVERSATION_OPTIONS}"
         )
         return NewInputStates.INPUT
 
@@ -56,16 +66,15 @@ class Add:
 
     async def input(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if not is_valid_bus_stop(update.message.text):
-            await update.message.reply_text("Please input a valid bus stop.")
-        elif update.message.text in context.user_data["bus_stops"]:
-            await update.message.reply_text(
-                "You have already bookmarked this bus stop. Please input another bus stop."
-            )
-        else:
-            context.user_data["bus_stops"].append(update.message.text)
-            await update.message.reply_text(
-                f"Bus stop added. Please key in your next bus stop.\n\n{CONVERSATION_OPTIONS}"
-            )
+            await update.message.reply_text(INVALID_BUS_STOP_MESSAGE)
+            return
+        if update.message.text in context.user_data["bus_stops"]:
+            await update.message.reply_text(BUS_STOP_ALREADY_BOOKMARKED_MESSAGE)
+            return
+        context.user_data["bus_stops"].append(update.message.text)
+        await update.message.reply_text(
+            f"Bus stop added. Please key in your next bus stop.\n\n{CONVERSATION_OPTIONS}"
+        )
 
     async def show(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         saved_bus_stop_display = _get_saved_bus_stop_display(
@@ -74,16 +83,16 @@ class Add:
         await update.message.reply_text(saved_bus_stop_display)
 
     async def finish(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-        await update.message.reply_text("Your bus stops has been saved.")
+        await update.message.reply_text(BUS_STOP_SAVED_MESSAGE)
         await update.message.reply_text(WELCOME_TEXT)
         return ConversationHandler.END
 
     async def exit(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-        await update.message.reply_text("Exit successful")
+        await update.message.reply_text(EXIT_SUCCESSFUL_MESSAGE)
         await update.message.reply_text(WELCOME_TEXT)
         return ConversationHandler.END
 
-    def get_handler(self, command: str) -> ConversationHandler:
+    def get_conversation_handler(self, command: str) -> ConversationHandler:
         return ConversationHandler(
             entry_points=[CommandHandler(command, self.add)],
             states={

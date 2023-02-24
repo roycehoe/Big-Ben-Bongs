@@ -45,15 +45,6 @@ class Remove:
         )
         return NewInputStates.INPUT
 
-    async def confirm(
-        self, update: Update, context: ContextTypes.DEFAULT_TYPE
-    ) -> NewInputStates:
-        saved_bus_stop_display = _get_saved_bus_stop_display(
-            context.user_data["bus_stops"]
-        )
-        await update.message.reply_text(saved_bus_stop_display)
-        return NewInputStates.CONFIRM
-
     async def input(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if update.message.text not in context.user_data["bus_stops"]:
             await update.message.reply_text(
@@ -75,7 +66,7 @@ class Remove:
         await update.message.reply_text(WELCOME_TEXT)
         return ConversationHandler.END
 
-    def get_handler(self, command: str) -> ConversationHandler:
+    def get_conversation_handler(self, command: str) -> ConversationHandler:
         return ConversationHandler(
             entry_points=[CommandHandler(command, self.remove)],
             states={

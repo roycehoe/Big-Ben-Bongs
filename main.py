@@ -51,10 +51,11 @@ application = ApplicationBuilder().token(BOT_TOKEN).build()
 application.add_handler(CommandHandler("start", start))
 application.add_handler(CommandHandler("help", start))
 application.add_handler(CommandHandler("menu", start))
+
 application.add_handler(CommandHandler("about", about))
 
-application.add_handler(Add().get_handler(command="add"))
+application.add_handler(Add().get_conversation_handler(command="add"))
 application.add_handler(CommandHandler("show", show))
-application.add_handler(Remove().get_handler(command="remove"))
+application.add_handler(Remove().get_conversation_handler(command="remove"))
 
 application.run_polling()
