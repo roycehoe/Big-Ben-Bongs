@@ -73,7 +73,7 @@ class Add(NestedMenu):
             await update.message.reply_text(INVALID_BUS_STOP_MESSAGE)
             return
 
-        if update.message.text in context.user_data["bus_stops"]:
+        if update.message.text in self.new_bus_stops:
             await update.message.reply_text(BUS_STOP_ALREADY_BOOKMARKED_MESSAGE)
             return
 
@@ -83,9 +83,6 @@ class Add(NestedMenu):
         )
 
     async def show(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        # saved_bus_stop_display = _get_saved_bus_stop_display(
-        #     context.user_data["bus_stops"]
-        # )
         saved_bus_stop_display = _get_saved_bus_stop_display(self.new_bus_stops)
         await update.message.reply_text(saved_bus_stop_display)
 
