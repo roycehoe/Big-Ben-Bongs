@@ -10,6 +10,7 @@ from telegram.ext import (
 
 from app.bus_stop import get_bus_stop_description, is_valid_bus_stop
 from constants import MAIN_MENU_MESSAGE
+from service.NestedMenuProtocol import NestedMenu
 
 
 class NewInputStates(Enum):
@@ -39,7 +40,7 @@ def _get_saved_bus_stop_display(bus_stops: list[str]) -> str:
     return f"{SAVED_BUS_STOP_DISPLAY_PREPEND_MESSAGE} \n{bus_stop_display}\n\n{CONVERSATION_OPTIONS}"
 
 
-class Add:
+class Add(NestedMenu):
     new_bus_stops: list[str] = []
 
     async def start(

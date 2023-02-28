@@ -1,3 +1,4 @@
+from enum import Enum
 from dotenv import dotenv_values
 
 env_values = dotenv_values(".env")
@@ -20,3 +21,8 @@ MAIN_MENU_MESSAGE = """What would you like to do?
 """
 
 ABOUT_MESSAGE = "View bus timings for your favourite bus stops"
+
+
+class InputStates(Enum):
+    INPUT = 0
+    CONFIRM = 1

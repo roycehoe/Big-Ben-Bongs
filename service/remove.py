@@ -9,13 +9,9 @@ from telegram.ext import (
 )
 
 from app.bus_stop import get_bus_stop_description, is_valid_bus_stop
-from constants import MAIN_MENU_MESSAGE
+from constants import MAIN_MENU_MESSAGE, InputStates
+from service.NestedMenuProtocol import NestedMenu
 from utils import show_main_menu
-
-
-class NewInputStates(Enum):
-    INPUT = 0
-    CONFIRM = 1
 
 
 CONVERSATION_OPTIONS = """Type /finish to finish deleting bus stops
@@ -33,10 +29,10 @@ def _get_saved_bus_stop_display(bus_stops: list[str]) -> str:
     )
 
 
-class Remove:
+class Remove(NestedMenu):
     async def start(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
-    ) -> NewInputStates:
+    ) -> InputStates:
         if not context.user_data.get("bus_stops"):
             await update.message.reply_text(f"You have no saved bus stops")
             return ConversationHandler.END
@@ -44,7 +40,7 @@ class Remove:
         await update.message.reply_text(
             f"Please input your bus stops.\n\n{CONVERSATION_OPTIONS}"
         )
-        return NewInputStates.INPUT
+        return InputStates.INPUT
 
     async def input(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if update.message.text not in context.user_data["bus_stops"]:
@@ -64,18 +60,18 @@ class Remove:
         await update.message.reply_text(saved_bus_stop_display)
 
     @show_main_menu
-    async def finish(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    async def exit(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         return ConversationHandler.END
 
     def get_conversation_handler(self, command: str) -> ConversationHandler:
         return ConversationHandler(
             entry_points=[CommandHandler(command, self.start)],
             states={
-                NewInputStates.INPUT: [
+                InputStates.INPUT: [
                     MessageHandler(filters.TEXT & (~filters.COMMAND), self.input),
                     CommandHandler("show", self.show),
-                    CommandHandler("finish", self.finish),
+                    CommandHandler("finish", self.exit),
                 ],
             },
-            fallbacks=[CommandHandler("finish", self.finish)],
+            fallbacks=[CommandHandler("finish", self.exit)],
         )

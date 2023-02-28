@@ -26,7 +26,7 @@ TEST_DATA = ["94079", "94069"]
 NO_BUS_STOP_FOUND_MESSAGE = "No bookmarked bus stops found. Please add a new bus stop"
 
 
-@show_main_menu(text=MAIN_MENU_MESSAGE)
+@show_main_menu
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return
 
