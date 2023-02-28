@@ -23,7 +23,6 @@ def init_bus_stop_data() -> None:
     while True:
         LTA_bus_stop_data = _get_LTA_bus_stop_response(start)
         if not LTA_bus_stop_data.bus_stops:
-            print("wee", LTA_bus_stop_data)
             break
 
         for bus_stop in LTA_bus_stop_data.bus_stops:

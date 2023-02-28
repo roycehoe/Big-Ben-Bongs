@@ -10,6 +10,7 @@ from telegram.ext import (
 
 from app.bus_stop import get_bus_stop_description, is_valid_bus_stop
 from constants import MAIN_MENU_MESSAGE
+from database import TelegramBotDb
 from models.NestedMenuProtocol import NestedMenu
 
 
@@ -45,10 +46,24 @@ class Add(NestedMenu):
     new_bus_stops: list[str] = []
 
     async def start(
-        self, update: Update, context: ContextTypes.DEFAULT_TYPE
+        self,
+        update: Update,
+        context: ContextTypes.DEFAULT_TYPE,
+        db_instance=TelegramBotDb(),
     ) -> NewInputStates:
-        if not context.user_data.get("bus_stops"):
-            context.user_data["bus_stops"] = []
+        # user_id = str(update.message.chat.id)
+        # instance = TelegramBotDb()
+        # instance.create({user_id: ["hello world"]})
+        # instance.get_distinct(user_id)
+
+        if not db_instance.get_distinct(str(update.message.chat.id)):
+            db_instance.create({str(update.message.chat.id): []})
+
+        # print(context)
+        # if not context.user_data.get("bus_stops"):
+        #     context.user_data["bus_stops"] = []
+
+        # if TelegramBotDb().get_distinct()
 
         await update.message.reply_text(
             f"{ASK_FOR_FIRST_BUS_STOP_MESSAGE}\n\n{CONVERSATION_OPTIONS}"

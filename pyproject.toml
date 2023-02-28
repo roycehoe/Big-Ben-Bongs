@@ -12,6 +12,7 @@ python-dotenv = "^0.21.1"
 pytz = "^2022.7.1"
 pydantic = "^1.10.5"
 black = "^23.1.0"
+pymongo = {extras = ["srv"], version = "^4.3.3"}
 
 [tool.poetry.dev-dependencies]
 black = "^23.1.0"
