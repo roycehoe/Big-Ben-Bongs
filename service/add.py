@@ -10,7 +10,7 @@ from telegram.ext import (
 
 from app.bus_stop import get_bus_stop_description, is_valid_bus_stop
 from constants import MAIN_MENU_MESSAGE
-from service.NestedMenuProtocol import NestedMenu
+from models.NestedMenuProtocol import NestedMenu
 
 
 class NewInputStates(Enum):
@@ -55,19 +55,6 @@ class Add(NestedMenu):
         )
         return NewInputStates.INPUT
 
-    async def confirm(
-        self, update: Update, context: ContextTypes.DEFAULT_TYPE
-    ) -> NewInputStates:
-        context.user_data["bus_stops"] = [
-            *context.user_data["bus_stops"],
-            *self.new_bus_stops,
-        ]
-        saved_bus_stop_display = _get_saved_bus_stop_display(
-            context.user_data["bus_stops"]
-        )
-        await update.message.reply_text(saved_bus_stop_display)
-        return NewInputStates.CONFIRM
-
     async def input(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if not is_valid_bus_stop(update.message.text):
             await update.message.reply_text(INVALID_BUS_STOP_MESSAGE)
@@ -87,6 +74,10 @@ class Add(NestedMenu):
         await update.message.reply_text(saved_bus_stop_display)
 
     async def finish(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+        context.user_data["bus_stops"] = [
+            *context.user_data["bus_stops"],
+            *self.new_bus_stops,
+        ]
         await update.message.reply_text(BUS_STOP_SAVED_MESSAGE)
         await update.message.reply_text(MAIN_MENU_MESSAGE)
         return ConversationHandler.END

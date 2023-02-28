@@ -8,9 +8,9 @@ from telegram.ext import (
     ContextTypes,
 )
 
-from app.bus_stop import get_bus_stop_description, is_valid_bus_stop
-from constants import MAIN_MENU_MESSAGE, InputStates
-from service.NestedMenuProtocol import NestedMenu
+from app.bus_stop import get_bus_stop_description
+from constants import InputStates
+from models.NestedMenuProtocol import NestedMenu
 from utils import show_main_menu
 
 

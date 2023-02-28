@@ -1,4 +1,15 @@
 [[package]]
+name = "aiolimiter"
+version = "1.0.0"
+description = "asyncio rate limiter, a leaky bucket implementation"
+category = "main"
+optional = false
+python-versions = ">=3.6.1,<4.0.0"
+
+[package.extras]
+docs = ["aiohttp-theme (>=0.1.6,<0.2.0)", "sphinx (>=2.2.1,<5.0.0)", "sphinx-autodoc-typehints (>=1.10.3,<2.0.0)", "sphinxcontrib-spelling (>=4.3,<8.0)", "toml (>=0.10.0,<0.11.0)"]
+
+[[package]]
 name = "anyio"
 version = "3.6.2"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
@@ -14,6 +25,31 @@ sniffio = ">=1.1"
 doc = ["packaging", "sphinx-rtd-theme", "sphinx-autodoc-typehints (>=1.2.0)"]
 test = ["coverage[toml] (>=4.5)", "hypothesis (>=4.0)", "pytest (>=7.0)", "pytest-mock (>=3.6.1)", "trustme", "contextlib2", "uvloop (<0.15)", "mock (>=4)", "uvloop (>=0.15)"]
 trio = ["trio (>=0.16,<0.22)"]
+
+[[package]]
+name = "apscheduler"
+version = "3.10.0"
+description = "In-process task scheduler with Cron-like capabilities"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+pytz = "*"
+six = ">=1.4.0"
+tzlocal = ">=2.0,<3.0.0 || >=4.0.0"
+
+[package.extras]
+doc = ["sphinx", "sphinx-rtd-theme"]
+gevent = ["gevent"]
+mongodb = ["pymongo (>=3.0)"]
+redis = ["redis (>=3.0)"]
+rethinkdb = ["rethinkdb (>=2.4.0)"]
+sqlalchemy = ["sqlalchemy (>=1.4)"]
+testing = ["pytest", "pytest-asyncio", "pytest-cov", "pytest-tornado5"]
+tornado = ["tornado (>=4.3)"]
+twisted = ["twisted"]
+zookeeper = ["kazoo"]
 
 [[package]]
 name = "black"
@@ -37,6 +73,14 @@ colorama = ["colorama (>=0.4.3)"]
 d = ["aiohttp (>=3.7.4)"]
 jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
+
+[[package]]
+name = "cachetools"
+version = "5.3.0"
+description = "Extensible memoizing collections and decorators"
+category = "main"
+optional = false
+python-versions = "~=3.7"
 
 [[package]]
 name = "certifi"
@@ -227,7 +271,12 @@ optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
+aiolimiter = {version = ">=1.0.0,<1.1.0", optional = true, markers = "extra == \"ext\""}
+APScheduler = {version = ">=3.10.0,<3.11.0", optional = true, markers = "extra == \"ext\""}
+cachetools = {version = ">=5.3.0,<5.4.0", optional = true, markers = "extra == \"ext\""}
 httpx = {version = ">=0.23.3,<0.24.0", extras = ["http2"]}
+pytz = {version = ">=2018.6", optional = true, markers = "extra == \"ext\""}
+tornado = {version = ">=6.2,<7.0", optional = true, markers = "extra == \"ext\""}
 
 [package.extras]
 all = ["httpx", "cryptography (>=39.0.1)", "aiolimiter (>=1.0.0,<1.1.0)", "tornado (>=6.2,<7.0)", "cachetools (>=5.3.0,<5.4.0)", "APScheduler (>=3.10.0,<3.11.0)", "pytz (>=2018.6)"]
@@ -246,6 +295,17 @@ description = "World timezone definitions, modern and historical"
 category = "main"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "pytz-deprecation-shim"
+version = "0.1.0.post0"
+description = "Shims to make deprecation of pytz easier"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.7"
+
+[package.dependencies]
+tzdata = {version = "*", markers = "python_version >= \"3.6\""}
 
 [[package]]
 name = "requests"
@@ -280,6 +340,14 @@ idna = {version = "*", optional = true, markers = "extra == \"idna2008\""}
 idna2008 = ["idna"]
 
 [[package]]
+name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
 name = "sniffio"
 version = "1.3.0"
 description = "Sniff out which async library your code is running under"
@@ -296,12 +364,44 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "tornado"
+version = "6.2"
+description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
+category = "main"
+optional = false
+python-versions = ">= 3.7"
+
+[[package]]
 name = "typing-extensions"
 version = "4.5.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "tzdata"
+version = "2022.7"
+description = "Provider of IANA time zone data"
+category = "main"
+optional = false
+python-versions = ">=2"
+
+[[package]]
+name = "tzlocal"
+version = "4.2"
+description = "tzinfo object for the local timezone"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+pytz-deprecation-shim = "*"
+tzdata = {version = "*", markers = "platform_system == \"Windows\""}
+
+[package.extras]
+devenv = ["black", "pyroma", "pytest-cov", "zest.releaser"]
+test = ["pytest-mock (>=3.3)", "pytest (>=4.3)"]
 
 [[package]]
 name = "urllib3"
@@ -319,11 +419,14 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "ebea756b0f0692baccd9a8cb89ee1d44f8fa80872fb0a18111c64492d204d077"
+content-hash = "0eade72e12014f1da54f16e5f511e09c932a48854d8c9eac68872da7432b01eb"
 
 [metadata.files]
+aiolimiter = []
 anyio = []
+apscheduler = []
 black = []
+cachetools = []
 certifi = []
 charset-normalizer = []
 click = [
@@ -346,12 +449,20 @@ pydantic = []
 python-dotenv = []
 python-telegram-bot = []
 pytz = []
+pytz-deprecation-shim = []
 requests = []
 rfc3986 = []
+six = [
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
+]
 sniffio = []
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
     {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
 ]
+tornado = []
 typing-extensions = []
+tzdata = []
+tzlocal = []
 urllib3 = []

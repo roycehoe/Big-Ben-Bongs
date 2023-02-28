@@ -38,6 +38,7 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def show(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print(context.user_data.get("bus_stops"))
     if not context.user_data.get("bus_stops"):
         await update.message.reply_text(NO_BUS_STOP_FOUND_MESSAGE)
         ConversationHandler.END
