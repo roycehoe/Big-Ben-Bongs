@@ -25,6 +25,7 @@ BUS_STOP_ALREADY_BOOKMARKED_MESSAGE = (
     "You have already bookmarked this bus stop. Please input another bus stop."
 )
 ASK_FOR_NEXT_BUS_STOP_MESSAGE = "Bus stop added. Please key in your next bus stop."
+ASK_FOR_FIRST_BUS_STOP_MESSAGE = "Please key in your first bus stop"
 INVALID_BUS_STOP_MESSAGE = "Please input a valid bus stop."
 BUS_STOP_SAVED_MESSAGE = "Your bus stops has been saved."
 EXIT_SUCCESSFUL_MESSAGE = "Exit successful"
@@ -50,7 +51,7 @@ class Add(NestedMenu):
             context.user_data["bus_stops"] = []
 
         await update.message.reply_text(
-            f"{ASK_FOR_NEXT_BUS_STOP_MESSAGE}\n\n{CONVERSATION_OPTIONS}"
+            f"{ASK_FOR_FIRST_BUS_STOP_MESSAGE}\n\n{CONVERSATION_OPTIONS}"
         )
         return NewInputStates.INPUT
 
@@ -78,13 +79,14 @@ class Add(NestedMenu):
 
         self.new_bus_stops.append(update.message.text)
         await update.message.reply_text(
-            f"Bus stop added. Please key in your next bus stop.\n\n{CONVERSATION_OPTIONS}"
+            f"{ASK_FOR_NEXT_BUS_STOP_MESSAGE}\n\n{CONVERSATION_OPTIONS}"
         )
 
     async def show(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        saved_bus_stop_display = _get_saved_bus_stop_display(
-            context.user_data["bus_stops"]
-        )
+        # saved_bus_stop_display = _get_saved_bus_stop_display(
+        #     context.user_data["bus_stops"]
+        # )
+        saved_bus_stop_display = _get_saved_bus_stop_display(self.new_bus_stops)
         await update.message.reply_text(saved_bus_stop_display)
 
     async def finish(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:

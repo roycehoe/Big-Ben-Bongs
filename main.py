@@ -23,7 +23,9 @@ logging.basicConfig(
 
 TEST_DATA = ["94079", "94069"]
 
-NO_BUS_STOP_FOUND_MESSAGE = "No bookmarked bus stops found. Please add a new bus stop"
+NO_BUS_STOP_FOUND_MESSAGE = """No bookmarked bus stops found. 
+
+/add - Add to your bookmarked bus stops"""
 
 
 @show_main_menu
