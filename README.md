@@ -5,7 +5,7 @@ A telegram bot that allows users to save and view bus timings for their favourit
 # Accomplishments
 
 - Created a telegram bot with a UI that allows users to add, remove, and view bus stop data
-- Created a script to scrapes all bus stop data from LTA's API
+- Created a script to scrapes all bus stop data from LTA's API with [LTA's permission](https://datamall.lta.gov.sg/content/datamall/en/request-for-api.html)
 
 # Non-project accomplishments
 
