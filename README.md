@@ -11,6 +11,7 @@ A telegram bot that allows users to save and view bus timings for their favourit
 
 - Create a cron job on a linux server, hosted on DigitalOcean
 - Schedule custom messages to be sent by a telegram bot on a given group chat on push to this repo with Github Actions
+- Use a Protocol class to structurally define telegram menus
 
 # Perfect is the enemy of the good
 
